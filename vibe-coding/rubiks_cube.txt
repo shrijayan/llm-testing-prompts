@@ -1,0 +1,129 @@
+You are tasked with creating a single HTML file (containing HTML, CSS, and JavaScript) that implements a 3x3x3 Rubik's Cube-like puzzle.
+
+**I. Puzzle Definition & Mechanics:**
+
+1.  **Cube Structure:**
+    *   A standard 3x3x3 cube.
+    *   Each of the 6 faces has a distinct "center color" associated with it, represented by a letter on its center square sticker. These colors and letters are fixed for each face's identity:
+        *   **U (Up/Top):** White ('W')
+        *   **D (Down/Bottom):** Yellow ('Y')
+        *   **F (Front):** Green ('G')
+        *   **B (Back):** Blue ('B')
+        *   **L (Left):** Orange ('O')
+        *   **R (Right):** Red ('R')
+    *   Initially, all 54 stickers on the cube are **Black** (`#000000`).
+
+2.  **Color Palette (for stickers):**
+    *   Black: `#000000` (or `black`)
+    *   White: `#FFFFFF` (or `white`)
+    *   Yellow: `#FFFF00` (or `yellow`)
+    *   Green: `#008000` (or `green`)
+    *   Blue: `#0000FF` (or `blue`)
+    *   Orange: `#FFA500` (or `orange`)
+    *   Red: `#FF0000` (or `red`)
+
+3.  **Operations:**
+    *   **A. Face Rotation:**
+        *   Standard Rubik's Cube face rotations.
+        *   Buttons will be provided for each face's clockwise (e.g., `R`) and counter-clockwise (e.g., `R'`) rotation.
+        *   Example: `R` rotates the Right face clockwise (when looking directly at the Right face). This affects the 9 stickers on the R face and 12 adjacent stickers on the U, D, F, B faces.
+    *   **B. Face Tapping (Color Toggle):**
+        *   Clicking on any of the 9 stickers of a displayed face in the 2D net (e.g., clicking one of the 9 green-face stickers) triggers a "tap" on that *entire face*.
+        *   The "tap" identifies the face's center color (e.g., Green for the F face).
+        *   On that *tapped face only*:
+            *   All stickers currently matching the face's center color (e.g., Green) turn Black.
+            *   All stickers currently Black turn to the face's center color (e.g., Green).
+            *   Stickers of any other color remain unchanged.
+        *   This toggle operation includes the center sticker of the face itself.
+
+4.  **Initial Scramble Process:**
+    1.  Start with all 54 stickers Black.
+    2.  "Tap" each of the 6 faces *once*. The order of these initial taps does not matter. (After this step, each face `X` will have all 9 of its stickers set to color `X`).
+    3.  Perform 20 random valid rotation moves. A random move consists of picking one of the 6 faces at random, and then picking either a clockwise or counter-clockwise rotation at random.
+
+5.  **Goal of the Puzzle:**
+    *   To make all 54 stickers on the cube Black.
+    *   When solved, display a "Solved!" message.
+
+**II. User Interface (UI) - Single HTML Page:**
+
+1.  **2D Cube Visualization (Net):**
+    *   Use the standard "unfolded" Rubik's Cube net. A common layout is:
+        ```
+              U U U
+              U U U
+              U U U
+        L L L F F F R R R B B B
+        L L L F F F R R R B B B
+        L L L F F F R R R B B B
+              D D D
+              D D D
+              D D D
+        ```
+    *   Map faces as: U=White, F=Green, D=Yellow, L=Orange, R=Red, B=Blue (as defined above).
+    *   Each of the 54 stickers should be visually represented (e.g., as a `<div>` or `<td>`).
+    *   The color of each sticker should be rendered according to the current puzzle state.
+    *   The center sticker of each face (e.g., `U[1][1]`, `F[1][1]`) must display its associated letter (W, Y, G, B, O, R) overlaid on its current color. The letter's color should contrast with the sticker's potential background colors (e.g., black letter if sticker is light, white letter if sticker is dark).
+
+2.  **Rotation Controls:**
+    *   Provide 12 buttons for rotations:
+        *   `U`, `U'`
+        *   `D`, `D'`
+        *   `F`, `F'`
+        *   `B`, `B'`
+        *   `L`, `L'`
+        *   `R`, `R'`
+    *   These buttons should be clearly labeled and trigger the respective clockwise/counter-clockwise rotation of the corresponding face.
+
+3.  **Face Tapping Interaction:**
+    *   Clicking on any of the 9 sticker `<div>`s (or `<td>`s) representing a particular face in the 2D net should trigger the "Face Tapping" operation for that entire face. For example, clicking `F[0][0]` (top-left of Front face) has the same effect as clicking `F[1][1]` (center of Front face) – it triggers a "tap" on the Green face.
+
+4.  **"Solved!" Message:**
+    *   A clear visual indication (e.g., a text message appearing below the cube or as an alert) when the puzzle is solved (all stickers are black).
+
+5.  **Reset Button:**
+    *   A "Reset" or "Scramble" button that re-initializes the puzzle to a new scrambled state using the defined scramble process.
+
+**III. Technical Implementation Details:**
+
+1.  **Single File:** All HTML, CSS, and JavaScript must be within a single `.html` file.
+2.  **JavaScript:**
+    *   **State Representation:** Maintain the cube's state in JavaScript. A good structure might be an object with keys like `U, D, F, B, L, R`, where each value is a 3x3 array representing the stickers' current colors (e.g., `cubeState.F[0][1]` is the color of the top-middle sticker on the Front face).
+    *   **Rotation Logic:** Implement the complex logic for how stickers move during each of the 12 possible face rotations. This is the most critical part. Be meticulous.
+        *   Helper function for rotating a 3x3 face's stickers in place (for the face being turned).
+        *   Logic for swapping rows/columns of stickers between adjacent faces.
+    *   **Tap Logic:** Implement the color toggling for a tapped face.
+    *   **Scramble Logic:** Implement the defined scramble process.
+    *   **Win Condition Check:** After every move (rotation or tap), check if all 54 stickers are Black.
+    *   **DOM Manipulation:** Update the `background-color` (and center letter for center pieces) of the sticker `<div>`s in the UI after any change in the cube's state.
+3.  **CSS:**
+    *   Style the sticker `<div>`s (size, border, margin).
+    *   Style the layout of the cube net.
+    *   Style the buttons and any messages.
+    *   Ensure center letters are visible.
+
+**IV. Key Implementation Guidance for the AI:**
+
+*   **Modularity:** Structure the JavaScript with clear functions for:
+    *   `initializeCube()` / `resetCube()`
+    *   `scrambleCube()`
+    *   `applyRotation(face, direction)`
+    *   `applyTap(faceName)`
+    *   `renderCube()`
+    *   `checkWinCondition()`
+    *   Helper functions for matrix rotations (e.g., `rotateFaceMatrixClockwise(matrix)`).
+*   **Clarity:** The code should be well-commented, especially the cube rotation and state manipulation logic.
+*   **Standard Face Orientations:** When implementing rotations, assume a standard orientation:
+    *   U: Top face
+    *   F: Front face, facing you
+    *   R: Right face
+    *   L: Left face
+    *   B: Back face
+    *   D: Down face
+*   **Rotation Example (F turn - Front Clockwise):**
+    1.  The F face's 9 stickers rotate clockwise on the F face.
+    2.  `U[2][0], U[2][1], U[2][2]` (bottom row of Up) -> `R[0][0], R[1][0], R[2][0]` (left column of Right, oriented correctly)
+    3.  `R[0][0], R[1][0], R[2][0]` (left column of Right) -> `D[0][2], D[0][1], D[0][0]` (top row of Down, reversed and oriented)
+    4.  `D[0][2], D[0][1], D[0][0]` (top row of Down) -> `L[2][2], L[1][2], L[0][2]` (right column of Left, oriented correctly)
+    5.  `L[2][2], L[1][2], L[0][2]` (right column of Left) -> `U[2][0], U[2][1], U[2][2]` (bottom row of Up, reversed and oriented)
+    *   Pay close attention to the indices and potential reversal of rows/columns when they move from one face to another.
